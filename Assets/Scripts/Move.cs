@@ -14,7 +14,6 @@ public class Move : MonoBehaviour
 
     public Vector2 Direction;
 
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -22,6 +21,11 @@ public class Move : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
+        //攻撃中は移動できない
+        if(Player.instance.IsActionAttack){
+            rb.velocity = Vector2.zero;
+            return;
+        }
 
         joystickMoveVector = Vector3.right * joystick.Horizontal * MoveSpeed + Vector3.up * joystick.Vertical * MoveSpeed;
         if (joystickMoveVector != Vector3.zero)  //ジョイスティックを動かすと動く。
@@ -29,7 +33,9 @@ public class Move : MonoBehaviour
             Vector2 v = new Vector2(joystickMoveVector.x,joystickMoveVector.y);
             rb.velocity = v;
             Direction = v;
+            Player.instance.IsActionMove = true;
         }else{
+            Player.instance.IsActionMove = false;
             rb.velocity = Vector2.zero;
         }
     }

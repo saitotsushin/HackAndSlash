@@ -11,7 +11,7 @@ public class EnemyCreatArea : MonoBehaviour
     [Tooltip("生成する範囲B")]
     public Transform RangeB;
     [Tooltip("プレイヤーとの距離")]
-    public float Distance = 4f;
+    public float Distance = 2f;
     void Start()
     {
         
@@ -20,12 +20,12 @@ public class EnemyCreatArea : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 _moveDirection = Player.instance.move.Direction;
+        Vector3 _moveDirection = Player.instance.mMove.Direction;
         Vector3 _moveDirectionNormalize = _moveDirection.normalized; 
 
         transform.position = new Vector3(
-            _moveDirectionNormalize.x * Distance,
-            _moveDirectionNormalize.y * Distance,
+            Player.instance.gameObject.transform.position.x + _moveDirectionNormalize.x * Distance,
+            Player.instance.gameObject.transform.position.y + _moveDirectionNormalize.y * Distance,
             0f
         );
 

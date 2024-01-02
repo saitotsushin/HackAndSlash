@@ -8,8 +8,8 @@ public class SpawnManager : MonoBehaviour
     public Camera MainCamera;
     private Transform CameraRange;
     private float time;
-    public float CreateTime = 1.0f;
-    public GameObject Player;
+    public float CreateTime = 3.0f;
+    // public GameObject Player;
     public GameObject CharactorField;
     public int DebugCount = 0;
     public EnemyCreatArea mEnemyCreatArea;
@@ -22,10 +22,13 @@ public class SpawnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Player.instance.IsActionMove == false){
+            return;
+        }
         // 前フレームからの時間を加算していく
         time = time + Time.deltaTime;
         
-        if(DebugCount < 10){
+        if(DebugCount < 3){
         }else{
             return;
         }
