@@ -26,6 +26,10 @@ public class EnemyMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(GManager.instance.GAMESTATUS == GAMESTATUS.GAMEOVER){
+            enemyRb.velocity = Vector2.zero;
+            return;
+        }
         // if(mEnemyAttack.IsAttacking){
         //     return;
         // }

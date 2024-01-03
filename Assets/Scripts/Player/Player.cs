@@ -15,7 +15,9 @@ public class Player : MonoBehaviour
     public PlayerStatus mPlayerStatus;
     public PlayerAttack mPlayerAttack;
     public PlayerImage mPlayerImage;
+    public PlayerHunger mPlayerHunger;
     public AttackTargetCircle attackTargetCircle;
+    public bool IsAlive = true;
 
     private float time;
     public float ActionTime = 1.0f;
@@ -29,6 +31,7 @@ public class Player : MonoBehaviour
             Destroy (gameObject);
         }
         mMove = GetComponent<Move>();
+        mPlayerHunger = GetComponent<PlayerHunger>();
     }
     
     void Start()
@@ -36,6 +39,9 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        if(!IsAlive){
+            return;
+        }
         time = time + Time.deltaTime;
         if (time > ActionTime)
         {
@@ -51,15 +57,18 @@ public class Player : MonoBehaviour
             mPlayerAttack.Attack(_Enemy);
         }
     }
-    public void Damage(){
+    public void Damage(int _damagePoint){
         mPlayerImage.DamageEffect();
-        mPlayerStatus.StatusHp -= 10;
+        mPlayerStatus.StatusHp -= _damagePoint;
         float hpPar = (float)mPlayerStatus.StatusHp / (float)mPlayerStatus.BaseStatusHp;
         HpBar.instance.UpdateHp(hpPar);
+        if(mPlayerStatus.StatusHp <= 0){
+            IsAlive = false;
+            GManager.instance.GameOver();
+        }
     }
     public void Hunger(){
-        mPlayerStatus.StatusHunger -= 0.001f;
-        int roundedUpInteger = Mathf.CeilToInt(mPlayerStatus.StatusHunger);
-        HungerPoint.instance.textComponent.text = roundedUpInteger.ToString();;
+        mPlayerHunger.Hunger();
     }
+
 }

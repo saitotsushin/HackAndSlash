@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
     public EnemyAttack mEnemyAttack;
 
     public int HP = 10;
+    public int ATK = 10;
 
     public SpriteRenderer SpriteImage;
 

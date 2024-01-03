@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+    public enum GAMESTATUS
+    {
+        PLAY,
+        GAMEOVER,
+    }
 public class GManager : MonoBehaviour
 {
     static public GManager instance;
+    public GAMESTATUS GAMESTATUS;
     
     void Awake ()
     {
@@ -25,5 +30,10 @@ public class GManager : MonoBehaviour
 
     public void LoadGameSetting(){
         ItemManager.instance.LoadEquipmentSlot();
+    }
+    public void GameOver(){
+        Debug.Log("ゲームオーバーです");
+        GAMESTATUS = GAMESTATUS.GAMEOVER;
+        UIManager.instance.GameOver();
     }
 }

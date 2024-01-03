@@ -21,6 +21,10 @@ public class Move : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
+        if(GManager.instance.GAMESTATUS == GAMESTATUS.GAMEOVER){
+            rb.velocity = Vector2.zero;
+            return;
+        }
         //攻撃中は移動できない
         if(Player.instance.IsActionAttack){
             rb.velocity = Vector2.zero;

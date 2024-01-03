@@ -106,7 +106,6 @@ public class ItemManager : MonoBehaviour {
         EquipmentList3.SetItemStatus(GetItem(GameSettingData.EquipmentId_3));
     }
     public void Fire(){
-        Debug.Log("Fire");
         if(FieldTarget){
             MenuItem _MenuItem = DraggedItem.GetComponent<MenuItem>();
             _MenuItem.Fire();

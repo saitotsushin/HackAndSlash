@@ -9,10 +9,14 @@ public class EnemyAttack : MonoBehaviour
     public Player mPlayer;
     public bool IsAttacking = false;
     private Vector3 beforePos;
+    public Enemy EnemyBase;
     void Start()
     {
         player = GameObject.FindWithTag(playerTag);
         mPlayer = player.GetComponent<Player>();
+        Transform myTransform = transform;
+        Transform parentTransform = myTransform.parent;
+        EnemyBase = parentTransform.gameObject.GetComponent<Enemy>();
     }
     private string playerTag = "Player";
     public void OnTriggerEnter2D(Collider2D collision) {
@@ -21,10 +25,13 @@ public class EnemyAttack : MonoBehaviour
         }
         if (collision.CompareTag(playerTag))
         {
-            mPlayer.Damage();
+            mPlayer.Damage(EnemyBase.ATK);
         }
     }
     public void Attack(){
+        if(GManager.instance.GAMESTATUS == GAMESTATUS.GAMEOVER){
+            return;
+        }
         Vector3 direction = (player.transform.position - transform.position).normalized;
         beforePos = transform.position;
         Vector3 afterPos = new Vector3(
