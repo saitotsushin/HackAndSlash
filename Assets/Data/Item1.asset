@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Item1
   m_EditorClassIdentifier: 
   itemId: 1
+  itemName: "\u30BD\u30FC\u30C9"
   itemType: 0
   equipment: 1
   itemSkin: {fileID: -2488674388523505039, guid: 7e815e58abea243e38521ecfd5f5eae3, type: 3}

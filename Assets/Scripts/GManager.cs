@@ -30,6 +30,13 @@ public class GManager : MonoBehaviour
 
     public void LoadGameSetting(){
         ItemManager.instance.LoadEquipmentSlot();
+        ItemManager.instance.SetItem(5);
+        ItemManager.instance.SetItem(6);
+        ItemManager.instance.SetItem(7);
+        ItemManager.instance.SetItem(8);
+        ItemManager.instance.SetItem(9);
+        //プレイヤーのセットアップ
+        Player.instance.SetUp();
     }
     public void GameOver(){
         Debug.Log("ゲームオーバーです");

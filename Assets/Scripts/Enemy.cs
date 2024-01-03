@@ -56,9 +56,9 @@ public class Enemy : MonoBehaviour
             )
         );
     }
-    public void Damage()
+    public void Damage(int _point = 2)
     {
-        HP -= 2;
+        HP -= _point;
         SpriteImage.color = new Color(1f, 0.5f, 0.5f, 1f);
         StartCoroutine(
             Utils.DelayMethod(0.2f, () =>

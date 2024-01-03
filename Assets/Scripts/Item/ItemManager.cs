@@ -47,6 +47,14 @@ public class ItemManager : MonoBehaviour {
 		);
         FieldItem _FieldItem = Item.GetComponent<FieldItem>();
         _FieldItem.SetItemStatus(_ItemData);
+        // プレファブのコピーを作成
+        if(_ItemData.itemEffect){
+            GameObject mItemEffect = Instantiate(_ItemData.itemEffect);
+
+            // 親オブジェクトの子要素にする
+            mItemEffect.transform.parent = Item.transform;
+
+        }
 	}
 	public void SetItem(int _ItemId){
         ItemData _ItemData = GetItem(_ItemId);
@@ -64,6 +72,16 @@ public class ItemManager : MonoBehaviour {
         _Draggable.dropAreaField = dropAreaField;
         
         _Draggable.raycastCamera = raycastCamera;
+
+        //効果のゲームオブジェクトを追加
+        if(_ItemData.itemEffect){
+            GameObject ItemEffect = Instantiate(
+                _ItemData.itemEffect,
+                new Vector3(0,0,0),
+                Quaternion.identity,
+                Item.transform
+            );
+        }
 
     }
 	public void SetEquipment(MenuItem _MenuItem){

@@ -50,6 +50,10 @@ public class Player : MonoBehaviour
         }
 
     }
+    public void SetUp(){
+        mPlayerStatus.SetUp();
+        mPlayerHunger.SetUp();
+    }
     public void CheckAutoAttack(){
         Enemy _Enemy = attackTargetCircle.GetNearEnemy(this.gameObject);
         if(_Enemy){       
@@ -57,18 +61,34 @@ public class Player : MonoBehaviour
             mPlayerAttack.Attack(_Enemy);
         }
     }
-    public void Damage(int _damagePoint){
+    public void Damage(int _SetPoint){
         mPlayerImage.DamageEffect();
-        mPlayerStatus.StatusHp -= _damagePoint;
-        float hpPar = (float)mPlayerStatus.StatusHp / (float)mPlayerStatus.BaseStatusHp;
-        HpBar.instance.UpdateHp(hpPar);
+        mPlayerStatus.StatusHp -= _SetPoint;
+        SetHpBar();
         if(mPlayerStatus.StatusHp <= 0){
             IsAlive = false;
             GManager.instance.GameOver();
         }
     }
+    public void Feel(int _SetPoint){
+        mPlayerImage.FeelEffect();
+        mPlayerStatus.StatusHp += _SetPoint;
+        if (mPlayerStatus.StatusHp >= mPlayerStatus.BaseStatusHp)
+        {
+            mPlayerStatus.StatusHp = mPlayerStatus.BaseStatusHp;
+        }
+        SetHpBar();
+
+    }
+    public void SetHpBar(){
+        float hpPar = (float)mPlayerStatus.StatusHp / (float)mPlayerStatus.BaseStatusHp;
+        HpBar.instance.UpdateHp(hpPar);        
+    }
     public void Hunger(){
         mPlayerHunger.Hunger();
+    }
+    public void HungerSetPoint(int _point){
+        mPlayerHunger.HungerSetPoint(_point);
     }
 
 }

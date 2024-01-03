@@ -9,6 +9,9 @@ public class MenuItem : MonoBehaviour
     public Image Skin;
     public ItemType itemType;
     public Equipment equipment;
+    public UseTarget useTarget;
+
+    public int point = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,8 +28,17 @@ public class MenuItem : MonoBehaviour
         Skin.sprite = _ItemData.itemSkin;
         itemType = _ItemData.itemType;
         equipment = _ItemData.equipment;
+        point = _ItemData.POINT;
+        useTarget = _ItemData.useTarget;
     }
     public void Fire(){
         Debug.Log("アイテムの発火");
+        foreach (Transform child in transform)
+        {
+            // 取得した子要素に対して処理を行う
+            ItemEffect itemEffect = child.GetComponent<ItemEffect>();
+            itemEffect.Effect();
+        }        
+
     }
 }

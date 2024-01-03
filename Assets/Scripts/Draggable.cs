@@ -11,14 +11,21 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public DropAreaField dropAreaField;
     private CanvasGroup canvasGroup = null;
     public Camera raycastCamera;
+    public UseTarget useTarget;
 
     public void Awake()
     {
         this.self = this.transform;
         this.area = this.self.parent;
+
         // this.root = this.transform.root.Find("Canvas");
         // this.root = this.area.parent;
         this.canvasGroup = this.GetComponent<CanvasGroup>();
+    }
+    void Start()
+    {
+        MenuItem mMenuItem = this.gameObject.GetComponent<MenuItem>();
+        useTarget = mMenuItem.useTarget; 
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -55,11 +62,13 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         // UI 機能を復元
         this.canvasGroup.blocksRaycasts = true;
         dropAreaField.SetRaycastTarget(false);
-        //状態のリセット START #TODO まとめる
-        SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
-        Color newColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        spriteRenderer.color = newColor;
-        //状態のリセット END 
+        if(ItemManager.instance.FieldTarget){
+            //状態のリセット START #TODO まとめる
+            SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
+            Color newColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            spriteRenderer.color = newColor;
+            //状態のリセット END 
+        }
         ItemManager.instance.Fire();
     }
     private void CheckTarget(PointerEventData eventData){
@@ -70,6 +79,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if (dropTarget != null)
         {
             Transform objTransform = dropTarget.transform;
+
+            string prefabTag = objTransform.tag;
+            
             ItemManager.instance.FieldTarget = dropTarget.gameObject;
             //状態のリセット START #TODO まとめる
             SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();

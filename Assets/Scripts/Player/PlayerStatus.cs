@@ -13,7 +13,13 @@ public class PlayerStatus : MonoBehaviour
     public int BaseStatusAtk = 2;
     public int BaseStatusDf = 2;
     public int BaseStatusSpeed = 1;
+    public float BaseStatusHunger = 100;
     public float StatusHunger = 100;
+
+    public void SetUp(){
+        float hpPar = (float)StatusHp / (float)BaseStatusHp;
+        HpBar.instance.UpdateHp(hpPar);        
+    }
     
     public void UpdateEquipment(List<EquipmentSlot> _EquipmentList){
         StatusAtk = BaseStatusAtk;

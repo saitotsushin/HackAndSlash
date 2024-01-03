@@ -21,13 +21,16 @@ public class HpBar : MonoBehaviour
         else {
             Destroy (gameObject);
         }
-    }
-    void Start()
-    {
         cachedRectTransform = HpDispBar.GetComponent<RectTransform>();
         hp_x = cachedRectTransform.sizeDelta.x;
     }
+    void Start()
+    {
+        
+        
+    }
     public void UpdateHp(float par){
+        Debug.Log("par=" + par);
         // float setHp = (float)hp;
         
         float SetPar = hp_x * par;

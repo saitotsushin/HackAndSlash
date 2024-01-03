@@ -19,4 +19,7 @@ public class PlayerImage : MonoBehaviour
             )
         );  
     }
+    public void FeelEffect(){
+        
+    }
 }

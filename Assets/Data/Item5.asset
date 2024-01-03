@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Item5
   m_EditorClassIdentifier: 
   itemId: 5
+  itemName: "\u30DD\u30FC\u30B7\u30E7\u30F3"
   itemType: 1
   equipment: 0
   itemSkin: {fileID: -1810742847348958660, guid: 7e815e58abea243e38521ecfd5f5eae3, type: 3}
   ATK: 10
   DF: 10
   SPEED: 1
-  FEEL: 0
-  HEALTH: 0
+  POINT: 20
+  itemEffect: {fileID: 4406638701404250729, guid: 2b49a071161bb4e6ea048ec11ddad2a4, type: 3}
