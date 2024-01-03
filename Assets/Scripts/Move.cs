@@ -34,6 +34,7 @@ public class Move : MonoBehaviour
             rb.velocity = v;
             Direction = v;
             Player.instance.IsActionMove = true;
+            Player.instance.Hunger();
         }else{
             Player.instance.IsActionMove = false;
             rb.velocity = Vector2.zero;

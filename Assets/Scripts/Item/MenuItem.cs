@@ -26,4 +26,7 @@ public class MenuItem : MonoBehaviour
         itemType = _ItemData.itemType;
         equipment = _ItemData.equipment;
     }
+    public void Fire(){
+        Debug.Log("アイテムの発火");
+    }
 }

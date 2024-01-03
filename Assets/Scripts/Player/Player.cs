@@ -57,4 +57,9 @@ public class Player : MonoBehaviour
         float hpPar = (float)mPlayerStatus.StatusHp / (float)mPlayerStatus.BaseStatusHp;
         HpBar.instance.UpdateHp(hpPar);
     }
+    public void Hunger(){
+        mPlayerStatus.StatusHunger -= 0.001f;
+        int roundedUpInteger = Mathf.CeilToInt(mPlayerStatus.StatusHunger);
+        HungerPoint.instance.textComponent.text = roundedUpInteger.ToString();;
+    }
 }

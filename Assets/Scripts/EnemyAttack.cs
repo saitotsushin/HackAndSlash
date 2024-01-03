@@ -16,7 +16,6 @@ public class EnemyAttack : MonoBehaviour
     }
     private string playerTag = "Player";
     public void OnTriggerEnter2D(Collider2D collision) {
-        Debug.Log("Enemy OnTriggerEnter2D collision="+collision+"/IsAttacking="+IsAttacking);
         if(IsAttacking){
             return;
         }

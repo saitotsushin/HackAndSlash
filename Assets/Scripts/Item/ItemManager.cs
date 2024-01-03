@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class ItemManager : MonoBehaviour {
 
 	static public ItemManager instance;
@@ -11,11 +11,16 @@ public class ItemManager : MonoBehaviour {
     public GameObject MenuItem;
     public GameObject MenuItemsUI;
     public GameObject FieldItem;
-	 public GameObject ItemFieldArea;
+	public GameObject ItemFieldArea;
+    public GameObject FieldTarget;
+    public GameObject DraggedItem;
 
 	public EquipmentSlot EquipmentList1;//WEAPON
     public EquipmentSlot EquipmentList2;//ARMOR
     public EquipmentSlot EquipmentList3;
+    public Transform DraggableRoot;
+    public DropAreaField dropAreaField;
+    public Camera raycastCamera;
 
     void Awake ()
     {
@@ -54,6 +59,11 @@ public class ItemManager : MonoBehaviour {
 		);
         MenuItem _MenuItem = Item.GetComponent<MenuItem>();
         _MenuItem.SetItemStatus(_ItemData);
+        Draggable _Draggable = Item.GetComponent<Draggable>();
+        _Draggable.root = DraggableRoot;
+        _Draggable.dropAreaField = dropAreaField;
+        
+        _Draggable.raycastCamera = raycastCamera;
 
     }
 	public void SetEquipment(MenuItem _MenuItem){
@@ -94,5 +104,14 @@ public class ItemManager : MonoBehaviour {
         EquipmentList1.SetItemStatus(GetItem(GameSettingData.EquipmentId_1));
         EquipmentList2.SetItemStatus(GetItem(GameSettingData.EquipmentId_2));
         EquipmentList3.SetItemStatus(GetItem(GameSettingData.EquipmentId_3));
+    }
+    public void Fire(){
+        Debug.Log("Fire");
+        if(FieldTarget){
+            MenuItem _MenuItem = DraggedItem.GetComponent<MenuItem>();
+            _MenuItem.Fire();
+            Destroy(DraggedItem);
+            DraggedItem = null;
+        }
     }
 }

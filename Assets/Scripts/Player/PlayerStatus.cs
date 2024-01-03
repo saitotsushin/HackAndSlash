@@ -13,6 +13,7 @@ public class PlayerStatus : MonoBehaviour
     public int BaseStatusAtk = 2;
     public int BaseStatusDf = 2;
     public int BaseStatusSpeed = 1;
+    public float StatusHunger = 100;
     
     public void UpdateEquipment(List<EquipmentSlot> _EquipmentList){
         StatusAtk = BaseStatusAtk;
