@@ -12,6 +12,7 @@ public class EnemyMove : MonoBehaviour
     private string playerTag = "Player";
     private string enemyTag = "Enemy";
     public EnemyAttack mEnemyAttack;
+    public Enemy EnemyBase;
 
 
     // Start is called before the first frame update
@@ -20,6 +21,10 @@ public class EnemyMove : MonoBehaviour
         enemyRb = GetComponent<Rigidbody2D>();
         player = GameObject.FindWithTag(playerTag);
         mPlayer = player.GetComponent<Player>();
+        // Parent = transform.parent.gameObject.GetComponent<Enemy>();
+        // Transform myTransform = transform;
+        // Transform parentTransform = myTransform.parent;
+        EnemyBase = transform.gameObject.GetComponent<Enemy>();        
     }
 
 
@@ -39,7 +44,9 @@ public class EnemyMove : MonoBehaviour
         }
         Vector3 direction = (player.transform.position - transform.position).normalized;
         enemyRb.velocity = direction * speed;
+        EnemyBase.UpdateActActiveTime();
 
     }
+
 
 }

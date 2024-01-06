@@ -16,6 +16,10 @@ public enum UseTarget {
     PLAYER,
     ENEMY
 };
+public enum TargetRange{
+    SINGLE,
+    ALL
+}
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
@@ -24,6 +28,7 @@ public class ItemData : ScriptableObject
     public ItemType itemType;
     public Equipment equipment;
     public UseTarget useTarget;
+    public TargetRange targetRange;
     public Sprite itemSkin;
     public int ATK = 10;
     public int DF = 10;

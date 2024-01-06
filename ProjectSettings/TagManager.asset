@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Item
+  - ItemDropField
   layers:
   - Default
   - TransparentFX

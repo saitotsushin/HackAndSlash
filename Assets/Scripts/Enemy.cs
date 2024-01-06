@@ -14,13 +14,20 @@ public class Enemy : MonoBehaviour
     public EnemyAttack mEnemyAttack;
 
     public int HP = 10;
+    private int BaseHP = 10;
     public int ATK = 10;
+    public float ActActiveTime = 0f;
+    private float BaseActActiveTime = 100f;
+    public float ActActiveTimeSpeed = 2.0f;
 
     public SpriteRenderer SpriteImage;
 
     public int DropItemId = 0;
 
     public bool IsActive = true;
+    public ActActiveTime mActActiveTime;
+    public bool CanAttack = false;
+    public HpBar mHpBar;
 
 
 
@@ -29,6 +36,13 @@ public class Enemy : MonoBehaviour
     {
         player = GameObject.FindWithTag(playerTag);
         mPlayer = player.GetComponent<Player>();
+        BaseHP = HP;
+    }
+    void Update(){
+        if(IsAttack && CanAttack){
+            Attack();
+            CanAttack = false;
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -37,8 +51,13 @@ public class Enemy : MonoBehaviour
         }
         if (collision.gameObject.CompareTag(playerTag))
         {
+            if(!CanAttack){
+                return;
+            }
+            Debug.Log("触れてる");
             Attack();
             IsAttack = true;
+            CanAttack = false;
         }
     }
     private void OnCollisionExit2D(Collision2D other)
@@ -69,6 +88,8 @@ public class Enemy : MonoBehaviour
                 }
             )
         );
+        float hpPar = (float)HP / (float)BaseHP;
+        mHpBar.UpdateHp(hpPar);
         if(HP <= 0){
             if(IsActive){
                 ItemManager.instance.CreateFieldItem(DropItemId,this.gameObject);
@@ -76,5 +97,19 @@ public class Enemy : MonoBehaviour
             IsActive = false;
             Destroy (this.gameObject);
         }
+    }
+    public void UpdateActActiveTime(){
+        ActActiveTime += 0.1f * ActActiveTimeSpeed;
+        if(ActActiveTime >= BaseActActiveTime){
+            ActActiveTime = BaseActActiveTime;
+            CanAttack = true;
+        }
+        float par = ActActiveTime / BaseActActiveTime;
+        mActActiveTime.UpdateBar(par);
+    }
+    public void ResetActActiveTime(){
+        ActActiveTime = 0;
+        mActActiveTime.UpdateBar(0.0f);
+        CanAttack = false;
     }
 }

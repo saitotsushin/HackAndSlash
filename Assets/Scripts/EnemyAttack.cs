@@ -51,6 +51,8 @@ public class EnemyAttack : MonoBehaviour
     public void EndDamageAnimation()
     {
         IsAttacking = false;
-        this.gameObject.transform.position = beforePos;
+        // this.gameObject.transform.position = beforePos;
+        this.gameObject.transform.position = EnemyBase.transform.position;
+        EnemyBase.ResetActActiveTime();
     }
 }

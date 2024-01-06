@@ -15,10 +15,16 @@ public class PlayerStatus : MonoBehaviour
     public int BaseStatusSpeed = 1;
     public float BaseStatusHunger = 100;
     public float StatusHunger = 100;
+    public float ActActiveTime = 0f;
+    public float BaseActActiveTime = 100f;
+    public float ActActiveTimeSpeed = 2.0f;
+    public Player Player;
+    void Start(){   
+    }
 
     public void SetUp(){
-        float hpPar = (float)StatusHp / (float)BaseStatusHp;
-        HpBar.instance.UpdateHp(hpPar);        
+        float hpPar = (float)StatusHp / (float)BaseStatusHp;        
+        Player.HpBar.UpdateHp(hpPar);        
     }
     
     public void UpdateEquipment(List<EquipmentSlot> _EquipmentList){
@@ -31,5 +37,19 @@ public class PlayerStatus : MonoBehaviour
             StatusDf += _ItemData.DF;
             StatusSpeed += _ItemData.SPEED;
         }
+    }
+    public void UpdateActActiveTime(){
+        ActActiveTime += 0.1f * ActActiveTimeSpeed;
+        if(ActActiveTime >= BaseActActiveTime){
+            ActActiveTime = BaseActActiveTime;
+            Player.instance.CanAttack = true;
+        }
+        float par = ActActiveTime / BaseActActiveTime;
+        Player.instance.mActActiveTime.UpdateBar(par);
+    }
+    public void ResetActActiveTime(){
+        ActActiveTime = 0;
+        Player.instance.mActActiveTime.UpdateBar(0.0f);
+        Player.instance.CanAttack = false;
     }
 }

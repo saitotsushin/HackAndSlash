@@ -10,6 +10,7 @@ public class MenuItem : MonoBehaviour
     public ItemType itemType;
     public Equipment equipment;
     public UseTarget useTarget;
+    public TargetRange targetRange;
 
     public int point = 0;
     // Start is called before the first frame update
@@ -30,6 +31,7 @@ public class MenuItem : MonoBehaviour
         equipment = _ItemData.equipment;
         point = _ItemData.POINT;
         useTarget = _ItemData.useTarget;
+        targetRange = _ItemData.targetRange;
     }
     public void Fire(){
         Debug.Log("アイテムの発火");

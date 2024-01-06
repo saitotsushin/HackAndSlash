@@ -12,20 +12,20 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private CanvasGroup canvasGroup = null;
     public Camera raycastCamera;
     public UseTarget useTarget;
+    public TargetRange targetRange;
+    public bool CanDrop = false;
 
     public void Awake()
     {
         this.self = this.transform;
         this.area = this.self.parent;
-
-        // this.root = this.transform.root.Find("Canvas");
-        // this.root = this.area.parent;
         this.canvasGroup = this.GetComponent<CanvasGroup>();
     }
     void Start()
     {
         MenuItem mMenuItem = this.gameObject.GetComponent<MenuItem>();
-        useTarget = mMenuItem.useTarget; 
+        useTarget = mMenuItem.useTarget;
+        targetRange = mMenuItem.targetRange;
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -39,9 +39,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     }
     public void OnDrag(PointerEventData eventData)
     {
-        // this.self.localPosition = GetLocalPosition(((PointerEventData)eventData).position, this.transform);
         this.self.transform.position = eventData.position;
-        CheckTarget((PointerEventData)eventData);
+        CanDrop = CheckTarget((PointerEventData)eventData);
     }
 
     private static Vector3 GetLocalPosition(Vector3 position, Transform transform)
@@ -57,7 +56,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        CheckDrop((PointerEventData)eventData);
+        // CheckDrop((PointerEventData)eventData);
 
         // UI 機能を復元
         this.canvasGroup.blocksRaycasts = true;
@@ -69,25 +68,42 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             spriteRenderer.color = newColor;
             //状態のリセット END 
         }
-        ItemManager.instance.Fire();
+        if(CanDrop){
+            ItemManager.instance.Fire();
+        }else{
+            this.self.SetParent(this.area);
+        }
     }
-    private void CheckTarget(PointerEventData eventData){
+    private bool CheckTarget(PointerEventData eventData){
         // ドロップ地点に DropAra があったらそこに入れる
+        // bool CanSetted = false;
         var dropTarget = GetRaycastTarget((PointerEventData)eventData);
         float newAlpha = 0f; // 例: アルファ値を半透明に設定
 
         if (dropTarget != null)
         {
-            Transform objTransform = dropTarget.transform;
+            Transform objTransform = dropTarget.transform.parent;
+
+            TestManager.instance.TestText.text = objTransform.gameObject.name.ToString();
 
             string prefabTag = objTransform.tag;
+            if(targetRange == TargetRange.SINGLE){
+                if(useTarget == UseTarget.PLAYER && prefabTag == "Player" || useTarget == UseTarget.ENEMY && prefabTag == "Enemy"){
+                    ItemManager.instance.FieldTarget = dropTarget.gameObject;
+                    //状態のリセット START #TODO まとめる
+                    SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
+                    Color newColor = new Color(1.0f, 0f, 0f, 1.0f);
+                    spriteRenderer.color = newColor;
+                    //状態のリセット END #TODO まとめる   
+                    return true;
+                }
+            }
+            if (targetRange == TargetRange.ALL)
+            {
+                
+                return true;
+            }
             
-            ItemManager.instance.FieldTarget = dropTarget.gameObject;
-            //状態のリセット START #TODO まとめる
-            SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
-            Color newColor = new Color(1.0f, 0f, 0f, 1.0f);
-            spriteRenderer.color = newColor;         
-            //状態のリセット END #TODO まとめる   
         }else{
             if(ItemManager.instance.FieldTarget){
                 //状態のリセット START #TODO まとめる
@@ -97,7 +113,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
                 //状態のリセット END #TODO まとめる
                 ItemManager.instance.FieldTarget = null;
             }
-        }            
+        }           
+        return false; 
     }
     private void CheckDrop(PointerEventData eventData){
         // ドロップ地点に DropAra があったらそこに入れる
@@ -140,6 +157,17 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             if (hitGameObject.GetComponent<DropAreaFieldTarget>())
             {
                 return hitGameObject.GetComponent<DropAreaFieldTarget>();
+            }
+        }
+        //UI周り
+        var results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+        foreach(var hit in results)
+        {
+            if (hit.gameObject.GetComponent<DropAreaFieldTarget>())
+            {
+                // 処理
+                return hit.gameObject.GetComponent<DropAreaFieldTarget>();
             }
         }
         return null;

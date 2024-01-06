@@ -16,10 +16,11 @@ MonoBehaviour:
   itemName: "\u30D5\u30A1\u30A4\u30A2ALL"
   itemType: 1
   equipment: 0
+  useTarget: 1
+  targetRange: 1
   itemSkin: {fileID: -6523306965787021843, guid: f15377d29bc7342539f49053d9b23dc5, type: 3}
   ATK: 10
   DF: 10
   SPEED: 1
-  FEEL: 0
-  HEALTH: 0
+  POINT: 0
   itemEffect: {fileID: 0}

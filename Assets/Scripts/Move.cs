@@ -26,21 +26,25 @@ public class Move : MonoBehaviour
             return;
         }
         //攻撃中は移動できない
-        if(Player.instance.IsActionAttack){
-            rb.velocity = Vector2.zero;
-            return;
-        }
+        // if(Player.instance.IsActionAttack){
+        //     rb.velocity = Vector2.zero;
+        //     return;
+        // }
 
         joystickMoveVector = Vector3.right * joystick.Horizontal * MoveSpeed + Vector3.up * joystick.Vertical * MoveSpeed;
+        if(joystick.IsClicked){
+            Player.instance.mPlayerStatus.UpdateActActiveTime();            
+            Player.instance.IsActionMove = true;
+        }else{
+            Player.instance.IsActionMove = false;
+        }
         if (joystickMoveVector != Vector3.zero)  //ジョイスティックを動かすと動く。
         {
             Vector2 v = new Vector2(joystickMoveVector.x,joystickMoveVector.y);
             rb.velocity = v;
             Direction = v;
-            Player.instance.IsActionMove = true;
             Player.instance.Hunger();
         }else{
-            Player.instance.IsActionMove = false;
             rb.velocity = Vector2.zero;
         }
     }

@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 
     
     public bool IsActionMove = false;
-    public bool IsActionAttack = false;
+    // public bool IsActionAttack = false;
     public bool IsDamage = false;
     private GameObject AttackEnemy;
     public Move mMove;
@@ -17,10 +17,13 @@ public class Player : MonoBehaviour
     public PlayerImage mPlayerImage;
     public PlayerHunger mPlayerHunger;
     public AttackTargetCircle attackTargetCircle;
+    public ActActiveTime mActActiveTime;
     public bool IsAlive = true;
+    public bool CanAttack = false;
+    public HpBar HpBar;
 
     private float time;
-    public float ActionTime = 1.0f;
+    // public float ActionTime = 1.0f;
     void Awake ()
     {
         if (instance == null) {
@@ -42,11 +45,15 @@ public class Player : MonoBehaviour
         if(!IsAlive){
             return;
         }
-        time = time + Time.deltaTime;
-        if (time > ActionTime)
+        // time = time + Time.deltaTime;
+        // if (time > ActionTime)
+        // {
+        //     CheckAutoAttack();
+        //     time = 0f;
+        // }
+        if (CanAttack)
         {
             CheckAutoAttack();
-            time = 0f;
         }
 
     }
@@ -59,6 +66,7 @@ public class Player : MonoBehaviour
         if(_Enemy){       
             AttackEnemy = _Enemy.gameObject;
             mPlayerAttack.Attack(_Enemy);
+            mPlayerStatus.ResetActActiveTime();
         }
     }
     public void Damage(int _SetPoint){
@@ -82,7 +90,7 @@ public class Player : MonoBehaviour
     }
     public void SetHpBar(){
         float hpPar = (float)mPlayerStatus.StatusHp / (float)mPlayerStatus.BaseStatusHp;
-        HpBar.instance.UpdateHp(hpPar);        
+        HpBar.UpdateHp(hpPar);        
     }
     public void Hunger(){
         mPlayerHunger.Hunger();
