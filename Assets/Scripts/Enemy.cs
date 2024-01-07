@@ -61,7 +61,6 @@ public class Enemy : MonoBehaviour
             if(!CanAttack){
                 return;
             }
-            Debug.Log("触れてる");
             Attack();
             IsAttack = true;
             CanAttack = false;

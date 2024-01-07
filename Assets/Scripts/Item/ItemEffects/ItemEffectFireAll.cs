@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemEffectFire : ItemEffect
+public class ItemEffectFireAll : ItemEffect
 {
     // Start is called before the first frame update
     void Start()
@@ -16,7 +16,7 @@ public class ItemEffectFire : ItemEffect
         
     }
     public override void EffectDetail(){
-        Debug.Log("ファイヤの効果詳細");
+        Debug.Log("ファイヤALLの効果詳細");
         if(ItemManager.instance.FieldTarget.Count > 0){
             for (int i = 0; i < ItemManager.instance.FieldTarget.Count; i++)
             {

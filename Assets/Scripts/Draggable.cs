@@ -56,22 +56,17 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // CheckDrop((PointerEventData)eventData);
-
         // UI 機能を復元
         this.canvasGroup.blocksRaycasts = true;
         stageDropAreaField.SetRaycastTarget(false);
-        if(ItemManager.instance.FieldTarget){
-            //状態のリセット START #TODO まとめる
-            SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
-            Color newColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            spriteRenderer.color = newColor;
-            //状態のリセット END 
-        }
+
         if(CanDrop){
             ItemManager.instance.Fire();
         }else{
             this.self.SetParent(this.area);
+        }
+        if(ItemManager.instance.FieldTarget.Count > 0){
+            ReSetTarget();
         }
     }
     private bool CheckTarget(PointerEventData eventData){
@@ -82,70 +77,101 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         if (dropTarget != null)
         {
-            // Transform objTransform = dropTarget.transform.parent;
-
             TestManager.instance.TestText.text = dropTarget.transform.gameObject.name.ToString();
 
             string prefabTag = dropTarget.transform.tag;
             if(targetRange == TargetRange.SINGLE){
                 if(prefabTag == "ItemDropField"){
                     //アイテムがSINGLEで対象がPLAYER
-                    SetTarget(useTarget);
+                    SetSingleTarget(useTarget,dropTarget.gameObject);
                 }
                 if(useTarget == UseTarget.ENEMY && prefabTag == "Enemy"){
-                    SetTarget(useTarget,dropTarget.gameObject);
-                    // ItemManager.instance.FieldTarget = dropTarget.gameObject;
-                    // //状態のリセット START #TODO まとめる
-                    // SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
-                    // Color newColor = new Color(1.0f, 0f, 0f, 1.0f);
-                    // spriteRenderer.color = newColor;
-                    // //状態のリセット END #TODO まとめる   
-                    return true;
+                    
+                    SetSingleTarget(useTarget,dropTarget.gameObject);
                 }
             }
             if (targetRange == TargetRange.ALL)
             {
-                
-                return true;
+                SetAllTarget(useTarget);
             }
             
         }else{
-            if(ItemManager.instance.FieldTarget){
+            if(ItemManager.instance.FieldTarget.Count > 0){
                 ReSetTarget();
-                //状態のリセット START #TODO まとめる
-                // SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
-                // Color newColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                // spriteRenderer.color = newColor;
-                //状態のリセット END #TODO まとめる
-                ItemManager.instance.FieldTarget = null;
+                //リセット
+                ItemManager.instance.FieldTarget = new List<GameObject>();
             }
-        }           
+        }
+        if (ItemManager.instance.FieldTarget.Count > 0)
+        {
+            return true;
+        }
         return false; 
     }
-    public void SetTarget(UseTarget _useTarget, GameObject _dropTarget = null){
-        //ターゲットがプレイヤー
+    public void SetSingleTarget(UseTarget _useTarget, GameObject _dropTarget = null){
+        ReSetTarget();
+        //ターゲットがプレイヤー、
         if(_useTarget == UseTarget.PLAYER){
-            ItemManager.instance.FieldTarget = Player.instance.gameObject;
+            ItemManager.instance.FieldTarget.Add(Player.instance.gameObject);
             CursorArrow _CursorArrow = Player.instance.gameObject.GetComponent<CursorArrow>();
             _CursorArrow.CursorShow(true);
         }
         if(_useTarget == UseTarget.ENEMY){
             if(_dropTarget){
                 if(_dropTarget.transform.tag == "ItemDropField"){
-                    // SpawnManager.instance.EnemySpawnList
+                    if(Player.instance.AttackEnemy){
+                        //すでに攻撃しようとしている敵を対象にする
+                        ItemManager.instance.FieldTarget.Add(Player.instance.AttackEnemy);
+                    }else{
+                        //なければ一番近い敵を対象にする
+                        Enemy _Enemy = Player.instance.mEnemyEffectArea.GetNearEnemy(Player.instance.gameObject);
+                        if(_Enemy){
+                            ItemManager.instance.FieldTarget.Add(_Enemy.gameObject);
+                        }
+                    }
                 }
                 if(_dropTarget.transform.tag == "Enemy"){
-                    
+                    ItemManager.instance.FieldTarget.Add(_dropTarget.transform.parent.gameObject);          
                 }
-                ItemManager.instance.FieldTarget = Player.instance.gameObject;
+                if(ItemManager.instance.FieldTarget.Count > 0){
+                    for(int i = 0; i < ItemManager.instance.FieldTarget.Count; i++){
+                        CursorArrow _CursorArrow = ItemManager.instance.FieldTarget[i].gameObject.GetComponent<CursorArrow>();
+                        _CursorArrow.CursorShow(true);
+                    }
+                }
+            }
+        }
+    }
+    public void SetAllTarget(UseTarget _useTarget){
+        ItemManager.instance.FieldTarget = new List<GameObject>();
+        List<GameObject> EnemyList = Player.instance.mEnemyEffectArea.EnemyList;
+        Debug.Log("EnemyList.Count=" + EnemyList.Count);
+        if (_useTarget == UseTarget.ENEMY)
+        {
+            for(int i = 0; i < EnemyList.Count; i++){
+                CursorArrow _CursorArrow = EnemyList[i].GetComponent<CursorArrow>();
+                _CursorArrow.CursorShow(true);
+                ItemManager.instance.FieldTarget.Add(EnemyList[i]);
             }
         }
     }
     public void ReSetTarget(){
-        GameObject Obj = ItemManager.instance.FieldTarget.gameObject;
-        CursorArrow _CursorArrow = Obj.GetComponent<CursorArrow>();
-        _CursorArrow.CursorShow(false);
-        ItemManager.instance.FieldTarget = null;
+        if(ItemManager.instance.FieldTarget.Count > 0){
+            for (int i = 0; i < ItemManager.instance.FieldTarget.Count; i++)
+            {
+                GameObject Obj = ItemManager.instance.FieldTarget[i].gameObject;
+                if (Obj)
+                {
+                    CursorArrow _CursorArrow = Obj.GetComponent<CursorArrow>();
+                    if (_CursorArrow)
+                    {
+                        _CursorArrow.CursorShow(false);
+                    }
+                }
+            }
+
+        }
+        ItemManager.instance.FieldTarget = new List<GameObject>();
     }
     private void CheckDrop(PointerEventData eventData){
         var dropArea = GetRaycastArea((PointerEventData)eventData);

@@ -12,7 +12,7 @@ public class ItemManager : MonoBehaviour {
     public GameObject MenuItemsUI;
     public GameObject FieldItem;
 	public GameObject ItemFieldArea;
-    public GameObject FieldTarget;
+    public List<GameObject> FieldTarget;
     public GameObject DraggedItem;
 
 	public EquipmentSlot EquipmentList1;//WEAPON
@@ -124,11 +124,14 @@ public class ItemManager : MonoBehaviour {
         EquipmentList3.SetItemStatus(GetItem(GameSettingData.EquipmentId_3));
     }
     public void Fire(){
-        if(FieldTarget){
+        if(FieldTarget.Count > 0){
             MenuItem _MenuItem = DraggedItem.GetComponent<MenuItem>();
             _MenuItem.Fire();
             Destroy(DraggedItem);
             DraggedItem = null;
+            for(int i = 0; i < FieldTarget.Count; i++){
+
+            }
         }
     }
 }

@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     public bool IsAlive = true;
     public bool CanAttack = false;
     public HpBar HpBar;
+    public EnemyEffectArea mEnemyEffectArea;
+    public TargetIcon mTargetIcon;
     
     // public float ActionTime = 1.0f;
     void Awake ()
@@ -54,6 +56,15 @@ public class Player : MonoBehaviour
         {
             CheckAutoAttack();
         }
+        
+        Enemy _Enemy = attackTargetCircle.GetNearEnemy(this.gameObject);
+        if(_Enemy){
+            AttackEnemy = _Enemy.gameObject;
+            mTargetIcon.SetTarget(AttackEnemy);
+        }else{
+            AttackEnemy = null;
+            mTargetIcon.Hide();
+        }
 
     }
     public void SetUp(){
@@ -61,12 +72,17 @@ public class Player : MonoBehaviour
         mPlayerHunger.SetUp();
     }
     public void CheckAutoAttack(){
-        Enemy _Enemy = attackTargetCircle.GetNearEnemy(this.gameObject);
-        if(_Enemy){       
-            AttackEnemy = _Enemy.gameObject;
+        if(AttackEnemy){
+            Enemy _Enemy = AttackEnemy.GetComponent<Enemy>();
             mPlayerAttack.Attack(_Enemy);
             mPlayerStatus.ResetActActiveTime();
         }
+        // Enemy _Enemy = attackTargetCircle.GetNearEnemy(this.gameObject);
+        // if(_Enemy){       
+        //     AttackEnemy = _Enemy.gameObject;
+        //     mPlayerAttack.Attack(_Enemy);
+        //     mPlayerStatus.ResetActActiveTime();
+        // }
     }
     public void Damage(int _SetPoint){
         mPlayerImage.DamageEffect();
