@@ -13,6 +13,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public Camera raycastCamera;
     public UseTarget useTarget;
     public TargetRange targetRange;
+    public ItemType itemType;
     public bool CanDrop = false;
 
     public void Awake()
@@ -26,6 +27,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         MenuItem mMenuItem = this.gameObject.GetComponent<MenuItem>();
         useTarget = mMenuItem.useTarget;
         targetRange = mMenuItem.targetRange;
+        itemType = mMenuItem.itemType;
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -60,6 +62,11 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         this.canvasGroup.blocksRaycasts = true;
         stageDropAreaField.SetRaycastTarget(false);
 
+        if(ItemManager.instance.IsThrowAway){
+            ItemManager.instance.ItemThrowAway(
+                Camera.main.ScreenToWorldPoint(eventData.position));
+        }
+
         if(CanDrop){
             ItemManager.instance.Fire();
         }else{
@@ -68,6 +75,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if(ItemManager.instance.FieldTarget.Count > 0){
             ReSetTarget();
         }
+        ItemManager.instance.IsThrowAway = false;
     }
     private bool CheckTarget(PointerEventData eventData){
         // ドロップ地点に DropAra があったらそこに入れる
@@ -80,6 +88,24 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             TestManager.instance.TestText.text = dropTarget.transform.gameObject.name.ToString();
 
             string prefabTag = dropTarget.transform.tag;
+            //道具の場合
+            if(itemType == ItemType.EQUIPMENT){
+                if (prefabTag == "ItemDropField")
+                {
+                    ItemManager.instance.DraggedItem = this.gameObject;
+                    ItemManager.instance.IsThrowAway = true;
+                    return true;
+                }else{
+                    return false;
+                }
+                if(prefabTag == "EquipmentField"){
+                    ItemManager.instance.DraggedItem = this.gameObject;
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            //魔法、アイテムの場合
             if(targetRange == TargetRange.SINGLE){
                 if(prefabTag == "ItemDropField"){
                     //アイテムがSINGLEで対象がPLAYER
@@ -145,7 +171,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void SetAllTarget(UseTarget _useTarget){
         ItemManager.instance.FieldTarget = new List<GameObject>();
         List<GameObject> EnemyList = Player.instance.mEnemyEffectArea.EnemyList;
-        Debug.Log("EnemyList.Count=" + EnemyList.Count);
         if (_useTarget == UseTarget.ENEMY)
         {
             for(int i = 0; i < EnemyList.Count; i++){
@@ -173,25 +198,25 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         }
         ItemManager.instance.FieldTarget = new List<GameObject>();
     }
-    private void CheckDrop(PointerEventData eventData){
-        var dropArea = GetRaycastArea((PointerEventData)eventData);
-        if (dropArea != null)
-        {
-            this.area = dropArea.transform;
-        }
-        this.self.SetParent(this.area);  
+    // private void CheckDrop(PointerEventData eventData){
+    //     var dropArea = GetRaycastArea((PointerEventData)eventData);
+    //     if (dropArea != null)
+    //     {
+    //         this.area = dropArea.transform;
+    //     }
+    //     this.self.SetParent(this.area);  
 
-        var dropEquipmentArea = GetRaycastEquipmentArea((PointerEventData)eventData);
-        if (dropEquipmentArea != null)
-        {
-            if(this.gameObject.GetComponent<MenuItem>()){
-                MenuItem _MenuItem = this.gameObject.GetComponent<MenuItem>();
-                if(_MenuItem.itemType == ItemType.EQUIPMENT){
-                    ItemManager.instance.SetEquipment(_MenuItem);
-                }
-            }
-        }    
-    }
+    //     var dropEquipmentArea = GetRaycastEquipmentArea((PointerEventData)eventData);
+    //     if (dropEquipmentArea != null)
+    //     {
+    //         if(this.gameObject.GetComponent<MenuItem>()){
+    //             MenuItem _MenuItem = this.gameObject.GetComponent<MenuItem>();
+    //             if(_MenuItem.itemType == ItemType.EQUIPMENT){
+    //                 ItemManager.instance.SetEquipment(_MenuItem);
+    //             }
+    //         }
+    //     }    
+    // }
     /// <summary>
     /// イベント発生地点の DropArea を取得する
     /// </summary>

@@ -103,7 +103,7 @@ public class Enemy : MonoBehaviour
         mHpBar.UpdateHp(hpPar);
         if(HP <= 0){
             if(IsActive){
-                ItemManager.instance.CreateFieldItem(DropItemId,this.gameObject);
+                ItemManager.instance.CreateFieldItem(DropItemId,this.gameObject.transform.position);
             }
             IsActive = false;
             Destroy (this.gameObject);

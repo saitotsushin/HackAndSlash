@@ -20,6 +20,8 @@ public class FieldItem : MonoBehaviour
         }
     }
     public void SetItemStatus(ItemData _ItemData){
-        ItemSprite = _ItemData.itemSkin;
+        ItemId = _ItemData.itemId;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = _ItemData.itemSkin;
     }
 }

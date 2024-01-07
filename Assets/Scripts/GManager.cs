@@ -30,11 +30,17 @@ public class GManager : MonoBehaviour
 
     public void LoadGameSetting(){
         ItemManager.instance.LoadEquipmentSlot();
+        // ItemManager.instance.SetItem(1);
+        // ItemManager.instance.SetItem(2);
+        // ItemManager.instance.SetItem(3);
+        // ItemManager.instance.SetItem(4);
         ItemManager.instance.SetItem(5);
         ItemManager.instance.SetItem(6);
         ItemManager.instance.SetItem(7);
         ItemManager.instance.SetItem(8);
         ItemManager.instance.SetItem(9);
+        ItemManager.instance.SetItem(10);
+        ItemManager.instance.SetItem(11);
         //プレイヤーのセットアップ
         Player.instance.SetUp();
     }

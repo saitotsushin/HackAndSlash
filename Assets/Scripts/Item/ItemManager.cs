@@ -21,6 +21,7 @@ public class ItemManager : MonoBehaviour {
     public Transform DraggableRoot;
     public DropAreaFieldTarget dropAreaField;
     public Camera raycastCamera;
+    public bool IsThrowAway = false;
 
     void Awake ()
     {
@@ -36,12 +37,13 @@ public class ItemManager : MonoBehaviour {
 	public ItemData GetItem(int searchId) {
 		return itemDataBase.GetItemLists().Find(item => item.itemId == searchId);
 	}
-	public void CreateFieldItem(int _ItemId,GameObject _Enemy){
+	public void CreateFieldItem(int _ItemId,Vector3 _Pos){
+        Debug.Log("_ItemId==" + _ItemId);
         ItemData _ItemData = GetItem(_ItemId);
 
 		GameObject Item = Instantiate(
 			FieldItem,
-			_Enemy.transform.position,
+			_Pos,
 			Quaternion.identity,
 			ItemFieldArea.transform
 		);
@@ -131,6 +133,24 @@ public class ItemManager : MonoBehaviour {
             DraggedItem = null;
             for(int i = 0; i < FieldTarget.Count; i++){
 
+            }
+        }
+    }
+    public void ItemThrowAway(Vector3 _pos){
+        if(DraggedItem){
+            MenuItem _MenuItem = DraggedItem.GetComponent<MenuItem>();
+            int ItemId = _MenuItem.itemId;
+            Debug.Log("ItemId=" + ItemId);
+            
+            RectTransform rectTransform = _MenuItem.GetComponent<RectTransform>();
+            if(rectTransform){
+
+                Vector3 SetPos = new Vector3(_pos.x,_pos.y,0);
+
+                CreateFieldItem(ItemId, SetPos);
+                // DraggedItem.transform.SetParent(ItemFieldArea.transform);
+                Destroy(DraggedItem);
+                DraggedItem = null;
             }
         }
     }

@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9c1a9953134848a49ab67c0299089b2, type: 3}
-  m_Name: Item4
+  m_Name: Item10
   m_EditorClassIdentifier: 
-  itemId: 4
-  itemName: "\u3086\u3073\u308F"
+  itemId: 10
+  itemName: "\u30BD\u30FC\u30C92"
   itemType: 0
-  equipment: 3
+  equipment: 2
   useTarget: 0
   targetRange: 0
-  itemSkin: {fileID: -4491292565564537788, guid: 7e815e58abea243e38521ecfd5f5eae3, type: 3}
-  ATK: 0
+  itemSkin: {fileID: 6932101365245252581, guid: 7e815e58abea243e38521ecfd5f5eae3, type: 3}
+  ATK: 4
   DF: 0
   SPEED: 1
   POINT: 0

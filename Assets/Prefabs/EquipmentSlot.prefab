@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7768458575931018002}
   - component: {fileID: 7768458575931018005}
   - component: {fileID: 7768458575931018000}
-  - component: {fileID: 5451632707865988578}
   - component: {fileID: 8719591128773441373}
   - component: {fileID: 8769691105802838716}
   m_Layer: 5
@@ -92,7 +91,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &5451632707865988578
+--- !u!114 &8719591128773441373
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,22 +107,6 @@ MonoBehaviour:
   Skin: {fileID: 3851760070473240513}
   itemType: 0
   equipment: 0
---- !u!114 &8719591128773441373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7768458575931018007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8003ec47ebfe64d01a59d1437198cfe0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemId: 0
-  Skin: {fileID: 0}
-  itemType: 0
-  equipment: 0
 --- !u!114 &8769691105802838716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,8 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28ed70c7794f84bd8b192b442eb59da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropTargetType: 0
-  imageComponent: {fileID: 0}
+  dropTargetType: 3
+  imageComponent: {fileID: 3851760070473240513}
 --- !u!1 &8540908279988967579
 GameObject:
   m_ObjectHideFlags: 0
