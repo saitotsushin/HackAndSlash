@@ -19,7 +19,7 @@ public class ItemManager : MonoBehaviour {
     public EquipmentSlot EquipmentList2;//ARMOR
     public EquipmentSlot EquipmentList3;
     public Transform DraggableRoot;
-    public DropAreaField dropAreaField;
+    public DropAreaFieldTarget dropAreaField;
     public Camera raycastCamera;
 
     void Awake ()
@@ -69,7 +69,7 @@ public class ItemManager : MonoBehaviour {
         _MenuItem.SetItemStatus(_ItemData);
         Draggable _Draggable = Item.GetComponent<Draggable>();
         _Draggable.root = DraggableRoot;
-        _Draggable.dropAreaField = dropAreaField;
+        _Draggable.stageDropAreaField = dropAreaField;
         
         _Draggable.raycastCamera = raycastCamera;
 

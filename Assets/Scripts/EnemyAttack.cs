@@ -7,7 +7,6 @@ public class EnemyAttack : MonoBehaviour
 {
     public GameObject player;
     public Player mPlayer;
-    public bool IsAttacking = false;
     private Vector3 beforePos;
     public Enemy EnemyBase;
     void Start()
@@ -20,7 +19,7 @@ public class EnemyAttack : MonoBehaviour
     }
     private string playerTag = "Player";
     public void OnTriggerEnter2D(Collider2D collision) {
-        if(IsAttacking){
+        if(EnemyBase.IsAttack){
             return;
         }
         if (collision.CompareTag(playerTag))
@@ -39,7 +38,7 @@ public class EnemyAttack : MonoBehaviour
             player.transform.position.y,
             transform.position.z
         );
-        IsAttacking = true;
+        EnemyBase.IsAttack = true;
         iTween.MoveTo(gameObject,
             iTween.Hash(
                 "position", afterPos,
@@ -50,7 +49,7 @@ public class EnemyAttack : MonoBehaviour
     }
     public void EndDamageAnimation()
     {
-        IsAttacking = false;
+        EnemyBase.IsAttack = false;
         // this.gameObject.transform.position = beforePos;
         this.gameObject.transform.position = EnemyBase.transform.position;
         EnemyBase.ResetActActiveTime();

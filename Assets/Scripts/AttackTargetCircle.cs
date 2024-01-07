@@ -15,17 +15,23 @@ public class AttackTargetCircle : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(enemyTag))
         {
-            Enemy _Enemy = collision.gameObject.GetComponent<Enemy>();
-            _Enemy.IsActionArea = true;
-            EnemyList.Add(_Enemy);
+            EnemyImage _EnemyImage = collision.gameObject.GetComponent<EnemyImage>();
+            if(_EnemyImage){
+                Enemy _Enemy = _EnemyImage.mEnemy;
+                _Enemy.IsActionArea = true;
+                EnemyList.Add(_Enemy);
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag(enemyTag))
         {
-            Enemy _Enemy = collision.gameObject.GetComponent<Enemy>();
-            _Enemy.IsActionArea = false;
+            EnemyImage _EnemyImage = collision.gameObject.GetComponent<EnemyImage>();
+            if(_EnemyImage){
+                Enemy _Enemy = _EnemyImage.mEnemy;
+                _Enemy.IsActionArea = false;
+            }
         }
         EnemyListUpdate();
     }

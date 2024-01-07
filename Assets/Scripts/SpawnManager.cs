@@ -4,15 +4,27 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    static public SpawnManager instance;
     public List<GameObject> EnemyList;
+    public List<GameObject> EnemySpawnList;
     public Camera MainCamera;
     private Transform CameraRange;
     private float time;
     public float CreateTime = 3.0f;
     // public GameObject Player;
-    public GameObject CharactorField;
+    public GameObject EnemyField;
     public int DebugCount = 0;
     public EnemyCreatArea mEnemyCreatArea;
+    void Awake ()
+    {
+        if (instance == null) {
+        
+            instance = this; 
+        }
+        else {
+            Destroy (gameObject);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -50,8 +62,9 @@ public class SpawnManager : MonoBehaviour
                 EnemyList[0],
                 new Vector3(x,y,0),
                 createPrefab.transform.rotation,
-                CharactorField.transform
+                EnemyField.transform
             );
+            EnemySpawnList.Add(Enemy);
             DebugCount++;
 
             // 経過時間リセット

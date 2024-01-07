@@ -13,6 +13,7 @@ public class Move : MonoBehaviour
     Vector3 joystickMoveVector;  //ジョイスティックの傾き度を取得
 
     public Vector2 Direction;
+    // public float Speed;
 
     void Start()
     {

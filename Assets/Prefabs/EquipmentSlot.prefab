@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8769691105802838716}
   m_Layer: 5
   m_Name: EquipmentSlot
-  m_TagString: Untagged
+  m_TagString: EquipmentField
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -136,6 +136,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28ed70c7794f84bd8b192b442eb59da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropTargetType: 0
+  imageComponent: {fileID: 0}
 --- !u!1 &8540908279988967579
 GameObject:
   m_ObjectHideFlags: 0

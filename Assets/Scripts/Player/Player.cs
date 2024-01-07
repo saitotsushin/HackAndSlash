@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public bool IsActionMove = false;
     // public bool IsActionAttack = false;
     public bool IsDamage = false;
-    private GameObject AttackEnemy;
+    public GameObject AttackEnemy;
     public Move mMove;
     public PlayerStatus mPlayerStatus;
     public PlayerAttack mPlayerAttack;
@@ -21,8 +21,7 @@ public class Player : MonoBehaviour
     public bool IsAlive = true;
     public bool CanAttack = false;
     public HpBar HpBar;
-
-    private float time;
+    
     // public float ActionTime = 1.0f;
     void Awake ()
     {

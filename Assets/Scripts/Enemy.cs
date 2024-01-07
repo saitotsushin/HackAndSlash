@@ -25,9 +25,12 @@ public class Enemy : MonoBehaviour
     public int DropItemId = 0;
 
     public bool IsActive = true;
+    public bool IsWait = true;
+    public bool IsTouchPlayer = false;
     public ActActiveTime mActActiveTime;
     public bool CanAttack = false;
     public HpBar mHpBar;
+    public GameObject CursorArrow;
 
 
 
@@ -39,6 +42,9 @@ public class Enemy : MonoBehaviour
         BaseHP = HP;
     }
     void Update(){
+        if(IsWait){
+            return;
+        }
         if(IsAttack && CanAttack){
             Attack();
             CanAttack = false;
@@ -51,6 +57,7 @@ public class Enemy : MonoBehaviour
         }
         if (collision.gameObject.CompareTag(playerTag))
         {
+            IsTouchPlayer = true;
             if(!CanAttack){
                 return;
             }
@@ -62,6 +69,11 @@ public class Enemy : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D other)
     {
+        if (other.gameObject.CompareTag(playerTag))
+        {
+            CanAttack = false;
+            IsTouchPlayer = false;
+        }
         IsAttack = false;
     }
     public void Attack(){

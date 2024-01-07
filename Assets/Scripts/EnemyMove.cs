@@ -35,9 +35,18 @@ public class EnemyMove : MonoBehaviour
             enemyRb.velocity = Vector2.zero;
             return;
         }
-        // if(mEnemyAttack.IsAttacking){
-        //     return;
-        // }
+        if(EnemyBase.IsTouchPlayer){
+            enemyRb.velocity = Vector2.zero;
+            return;
+        }
+        if(EnemyBase.IsAttack){
+            enemyRb.velocity = Vector2.zero;
+            return;
+        }
+        if(EnemyBase.IsWait){
+            enemyRb.velocity = Vector2.zero;
+            return;
+        }
         if(mPlayer.IsActionMove == false){
             enemyRb.velocity = Vector2.zero;
             return;

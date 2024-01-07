@@ -8,7 +8,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public Transform root;
     public Transform area;
     private Transform self;
-    public DropAreaField dropAreaField;
+    public DropAreaFieldTarget stageDropAreaField;
     private CanvasGroup canvasGroup = null;
     public Camera raycastCamera;
     public UseTarget useTarget;
@@ -34,7 +34,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         // UI 機能を一時的無効化
         this.canvasGroup.blocksRaycasts = false;
-        dropAreaField.SetRaycastTarget(true);
+        stageDropAreaField.SetRaycastTarget(true);
         ItemManager.instance.DraggedItem = this.gameObject;
     }
     public void OnDrag(PointerEventData eventData)
@@ -60,7 +60,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         // UI 機能を復元
         this.canvasGroup.blocksRaycasts = true;
-        dropAreaField.SetRaycastTarget(false);
+        stageDropAreaField.SetRaycastTarget(false);
         if(ItemManager.instance.FieldTarget){
             //状態のリセット START #TODO まとめる
             SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
@@ -82,19 +82,24 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         if (dropTarget != null)
         {
-            Transform objTransform = dropTarget.transform.parent;
+            // Transform objTransform = dropTarget.transform.parent;
 
-            TestManager.instance.TestText.text = objTransform.gameObject.name.ToString();
+            TestManager.instance.TestText.text = dropTarget.transform.gameObject.name.ToString();
 
-            string prefabTag = objTransform.tag;
+            string prefabTag = dropTarget.transform.tag;
             if(targetRange == TargetRange.SINGLE){
-                if(useTarget == UseTarget.PLAYER && prefabTag == "Player" || useTarget == UseTarget.ENEMY && prefabTag == "Enemy"){
-                    ItemManager.instance.FieldTarget = dropTarget.gameObject;
-                    //状態のリセット START #TODO まとめる
-                    SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
-                    Color newColor = new Color(1.0f, 0f, 0f, 1.0f);
-                    spriteRenderer.color = newColor;
-                    //状態のリセット END #TODO まとめる   
+                if(prefabTag == "ItemDropField"){
+                    //アイテムがSINGLEで対象がPLAYER
+                    SetTarget(useTarget);
+                }
+                if(useTarget == UseTarget.ENEMY && prefabTag == "Enemy"){
+                    SetTarget(useTarget,dropTarget.gameObject);
+                    // ItemManager.instance.FieldTarget = dropTarget.gameObject;
+                    // //状態のリセット START #TODO まとめる
+                    // SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
+                    // Color newColor = new Color(1.0f, 0f, 0f, 1.0f);
+                    // spriteRenderer.color = newColor;
+                    // //状態のリセット END #TODO まとめる   
                     return true;
                 }
             }
@@ -106,18 +111,43 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             
         }else{
             if(ItemManager.instance.FieldTarget){
+                ReSetTarget();
                 //状態のリセット START #TODO まとめる
-                SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
-                Color newColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                spriteRenderer.color = newColor;
+                // SpriteRenderer spriteRenderer = ItemManager.instance.FieldTarget.GetComponent<SpriteRenderer>();
+                // Color newColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                // spriteRenderer.color = newColor;
                 //状態のリセット END #TODO まとめる
                 ItemManager.instance.FieldTarget = null;
             }
         }           
         return false; 
     }
+    public void SetTarget(UseTarget _useTarget, GameObject _dropTarget = null){
+        //ターゲットがプレイヤー
+        if(_useTarget == UseTarget.PLAYER){
+            ItemManager.instance.FieldTarget = Player.instance.gameObject;
+            CursorArrow _CursorArrow = Player.instance.gameObject.GetComponent<CursorArrow>();
+            _CursorArrow.CursorShow(true);
+        }
+        if(_useTarget == UseTarget.ENEMY){
+            if(_dropTarget){
+                if(_dropTarget.transform.tag == "ItemDropField"){
+                    // SpawnManager.instance.EnemySpawnList
+                }
+                if(_dropTarget.transform.tag == "Enemy"){
+                    
+                }
+                ItemManager.instance.FieldTarget = Player.instance.gameObject;
+            }
+        }
+    }
+    public void ReSetTarget(){
+        GameObject Obj = ItemManager.instance.FieldTarget.gameObject;
+        CursorArrow _CursorArrow = Obj.GetComponent<CursorArrow>();
+        _CursorArrow.CursorShow(false);
+        ItemManager.instance.FieldTarget = null;
+    }
     private void CheckDrop(PointerEventData eventData){
-        // ドロップ地点に DropAra があったらそこに入れる
         var dropArea = GetRaycastArea((PointerEventData)eventData);
         if (dropArea != null)
         {
@@ -132,11 +162,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
                 MenuItem _MenuItem = this.gameObject.GetComponent<MenuItem>();
                 if(_MenuItem.itemType == ItemType.EQUIPMENT){
                     ItemManager.instance.SetEquipment(_MenuItem);
-                    // this.area = dropEquipmentArea.transform;
                 }
             }
-        }
-              
+        }    
     }
     /// <summary>
     /// イベント発生地点の DropArea を取得する
@@ -177,16 +205,16 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     /// </summary>
     /// <param name="eventData">イベントデータ</param>
     /// <returns>DropArea</returns>
-    private static DropArea GetRaycastArea(PointerEventData eventData)
+    private static DropAreaFieldTarget GetRaycastArea(PointerEventData eventData)
     {
         var results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
         foreach(var hit in results)
         {
-            if (hit.gameObject.GetComponent<DropArea>())
+            if (hit.gameObject.GetComponent<DropAreaFieldTarget>())
             {
                 // 処理
-                return hit.gameObject.GetComponent<DropArea>();
+                return hit.gameObject.GetComponent<DropAreaFieldTarget>();
             }
         }
         return null;
