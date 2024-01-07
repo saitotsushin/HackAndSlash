@@ -45,12 +45,12 @@ public class Enemy : MonoBehaviour
         if(IsWait){
             return;
         }
-        if(IsAttack && CanAttack){
+        if(IsTouchPlayer && CanAttack){
             Attack();
             CanAttack = false;
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag(enemyTag))
         {
@@ -58,22 +58,21 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag(playerTag))
         {
             IsTouchPlayer = true;
-            if(!CanAttack){
-                return;
-            }
-            Attack();
-            IsAttack = true;
-            CanAttack = false;
+            // if(!CanAttack){
+            //     return;
+            // }
+            // Attack();
+            // IsAttack = true;            
         }
     }
-    private void OnCollisionExit2D(Collision2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.CompareTag(playerTag))
         {
-            CanAttack = false;
+            // CanAttack = false;
             IsTouchPlayer = false;
         }
-        IsAttack = false;
+        // IsAttack = false;
     }
     public void Attack(){
         float _DelayTime = 1.0f;

@@ -35,10 +35,7 @@ public class EnemyMove : MonoBehaviour
             enemyRb.velocity = Vector2.zero;
             return;
         }
-        if(EnemyBase.IsTouchPlayer){
-            enemyRb.velocity = Vector2.zero;
-            return;
-        }
+
         if(EnemyBase.IsAttack){
             enemyRb.velocity = Vector2.zero;
             return;
@@ -51,8 +48,13 @@ public class EnemyMove : MonoBehaviour
             enemyRb.velocity = Vector2.zero;
             return;
         }
-        Vector3 direction = (player.transform.position - transform.position).normalized;
-        enemyRb.velocity = direction * speed;
+        if(EnemyBase.IsTouchPlayer){
+            enemyRb.velocity = Vector2.zero;
+            // return;
+        }else{
+            Vector3 direction = (player.transform.position - transform.position).normalized;
+            enemyRb.velocity = direction * speed;
+        }
         EnemyBase.UpdateActActiveTime();
 
     }
